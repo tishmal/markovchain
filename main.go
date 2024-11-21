@@ -1,15 +1,20 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"markovchain/logic"
-	"math/rand"
+	"os"
 	"strings"
 )
 
 func main() {
+	args := os.Args
+	if len(args) < 2 {
+		fmt.Println("Error: no input text")
+		os.Exit(1)
+	}
+
 	// Флаги командной строки
 	wordCount := flag.Int("w", 100, "Maximum number of words to generate")
 	prefix := flag.String("p", "", "Starting prefix")
@@ -49,7 +54,7 @@ func main() {
 	}
 
 	// Генерация текста по алгоритму Маркова
-	generatedText, err := generateMarkovChain(words, *wordCount, *prefix, *prefixLength)
+	generatedText, err := logic.GenerateMarkovChain(words, *wordCount, *prefix, *prefixLength)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -57,72 +62,4 @@ func main() {
 
 	// Вывод результата
 	fmt.Println(strings.Join(generatedText, " "))
-}
-
-// Генерация текста на основе алгоритма Маркова
-func generateMarkovChain(words []string, wordCount int, prefix string, prefixLength int) ([]string, error) {
-	// Разделение заданного префикса на слова
-	startPrefix := strings.Fields(prefix)
-	if len(startPrefix) > prefixLength {
-		return nil, errors.New("provided prefix length does not match the input prefix")
-	}
-
-	// Если префикс не задан, использовать начальные слова из текста
-	if len(startPrefix) == 0 {
-		startPrefix = words[:prefixLength]
-	} else {
-		// Проверить, существует ли префикс в тексте
-		if !isPrefixInText(startPrefix, words) {
-			return nil, errors.New("provided prefix not found in the input text")
-		}
-	}
-
-	// Создание карты переходов
-	markovChain := buildMarkovChain(words, prefixLength)
-
-	// Генерация текста
-	var result []string
-	result = append(result, startPrefix...)
-
-	currentPrefix := strings.Join(startPrefix, " ")
-	for len(result) < wordCount {
-		choices, exists := markovChain[currentPrefix]
-		if !exists || len(choices) == 0 {
-			break
-		}
-
-		// Выбрать случайное следующее слово
-		nextWord := choices[rand.Intn(len(choices))]
-		result = append(result, nextWord)
-
-		// Обновить текущий префикс
-		prefixWords := append(strings.Fields(currentPrefix)[1:], nextWord)
-		currentPrefix = strings.Join(prefixWords, " ")
-	}
-
-	return result, nil
-}
-
-// Проверка, существует ли префикс в тексте
-func isPrefixInText(prefix []string, words []string) bool {
-	prefixStr := strings.Join(prefix, " ")
-	for i := 0; i <= len(words)-len(prefix); i++ {
-		if strings.Join(words[i:i+len(prefix)], " ") == prefixStr {
-			return true
-		}
-	}
-	return false
-}
-
-// Построение карты переходов для цепи Маркова
-func buildMarkovChain(words []string, prefixLength int) map[string][]string {
-	markovChain := make(map[string][]string)
-
-	for i := 0; i <= len(words)-prefixLength-1; i++ {
-		key := strings.Join(words[i:i+prefixLength], " ")
-		nextWord := words[i+prefixLength]
-		markovChain[key] = append(markovChain[key], nextWord)
-	}
-
-	return markovChain
 }
