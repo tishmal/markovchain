@@ -1,15 +1,12 @@
 package main
 
 import (
-	"bufio"
 	"errors"
 	"flag"
 	"fmt"
 	"markovchain/logic"
 	"math/rand"
-	"os"
 	"strings"
-	"time"
 )
 
 func main() {
@@ -39,7 +36,7 @@ func main() {
 	}
 
 	// Чтение входного текста
-	words, err := readInput()
+	words, err := logic.ReadInput()
 	if err != nil {
 		fmt.Println("Error reading input:", err)
 		return
@@ -60,23 +57,6 @@ func main() {
 
 	// Вывод результата
 	fmt.Println(strings.Join(generatedText, " "))
-}
-
-// Чтение текста из stdin
-func readInput() ([]string, error) {
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Split(bufio.ScanWords)
-
-	var words []string
-	for scanner.Scan() {
-		words = append(words, scanner.Text())
-	}
-
-	if err := scanner.Err(); err != nil {
-		return nil, err
-	}
-
-	return words, nil
 }
 
 // Генерация текста на основе алгоритма Маркова
@@ -145,8 +125,4 @@ func buildMarkovChain(words []string, prefixLength int) map[string][]string {
 	}
 
 	return markovChain
-}
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
 }
