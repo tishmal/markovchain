@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"markovchain/logic"
 	"math/rand"
 	"os"
 	"strings"
@@ -22,7 +23,8 @@ func main() {
 
 	// Показ справки
 	if *showHelp {
-		Help()
+		logic.Help()
+		return
 	}
 
 	// Проверка значений флагов
@@ -147,19 +149,4 @@ func buildMarkovChain(words []string, prefixLength int) map[string][]string {
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
-}
-
-func Help() {
-	fmt.Println(`Markov Chain text generator.
-
-Usage:
-  markovchain [-w <N>] [-p <S>] [-l <N>]
-  markovchain --help
-
-Options:
-  --help  Show this screen.
-  -w N    Number of maximum words (default: 100, max: 10000)
-  -p S    Starting prefix
-  -l N    Prefix length (default: 2, max: 5)`)
-	return
 }
