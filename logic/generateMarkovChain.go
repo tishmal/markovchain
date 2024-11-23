@@ -1,9 +1,9 @@
 package logic
 
 import (
-	"errors"    // Пакет для работы с ошибками
-	"math/rand" // Пакет для генерации случайных чисел
-	"strings"   // Пакет для работы со строками
+	"errors"
+	"math/rand"
+	"strings"
 )
 
 // GenerateMarkovChain генерирует текст на основе алгоритма Маркова

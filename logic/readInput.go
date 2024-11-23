@@ -1,30 +1,25 @@
 package logic
 
 import (
-	"bufio" // Пакет для буферизованного ввода
-	"os"    // Пакет для работы с операционной системой
+	"bufio"
+	"os"
 )
 
-// ReadInput считывает текст из stdin и возвращает его как слайс слов
+// ReadInput считывает текст из stdin и возвращает его как слайс слов words и nil, если нет ошибок
 func ReadInput() ([]string, error) {
-	// Создаем новый сканер для чтения из стандартного ввода
-	scanner := bufio.NewScanner(os.Stdin)
-	// Устанавливаем режим разбора текста: разбиваем ввод по словам
-	scanner.Split(bufio.ScanWords)
+	scanner := bufio.NewScanner(os.Stdin) // создаём объект для постраничного чтения данных из потока
 
-	// Инициализируем пустой слайс для хранения слов
+	scanner.Split(bufio.ScanWords) // этому объекту задаём режим разделения на отдельные слова
+
 	var words []string
-	// Построчно читаем ввод, добавляя каждое слово в слайс
-	for scanner.Scan() {
+
+	for scanner.Scan() { // читает элементы объекта
 		words = append(words, scanner.Text())
 	}
 
-	// Проверяем наличие ошибок во время чтения
 	if err := scanner.Err(); err != nil {
-		// Если ошибка есть, возвращаем её
 		return nil, err
 	}
 
-	// Возвращаем слайс слов и отсутствие ошибок
 	return words, nil
 }

@@ -1,6 +1,6 @@
 package logic
 
-import "strings" // Пакет для работы со строками
+import "strings"
 
 // isPrefixInText проверяет, существует ли указанный префикс в списке слов
 func isPrefixInText(prefix []string, words []string) bool {

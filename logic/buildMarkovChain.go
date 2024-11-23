@@ -1,6 +1,6 @@
 package logic
 
-import "strings" // Пакет для работы со строками
+import "strings"
 
 // BuildMarkovChain строит карту переходов для цепи Маркова на основе текста
 func BuildMarkovChain(words []string, prefixLength int) map[string][]string {
