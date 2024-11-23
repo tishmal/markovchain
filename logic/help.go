@@ -1,6 +1,9 @@
 package logic
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 func Help() {
 	fmt.Println(`Markov Chain text generator.
@@ -14,4 +17,5 @@ Options:
   -w N    Number of maximum words (default: 100, max: 10000)
   -p S    Starting prefix
   -l N    Prefix length (default: 2, max: 5)`)
+	os.Exit(0)
 }

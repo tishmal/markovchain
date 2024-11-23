@@ -5,23 +5,25 @@ import (
 	"os"
 )
 
-func Validation(showHelp *bool, wordCount *int, prefix *string, prefixLength *int) {
+func Validation(help *bool, maxWords *int, prefix *string, prefixLength *int) {
 	// Флаг --help
-	if *showHelp {
+	if *help {
 		Help()
-		os.Exit(0)
 	}
 
-	// Основная валдация:
-	// Проверяем, чтобы количество слов не выходило за пределы допустимых значений
-	if *wordCount < 0 || *wordCount > 10000 {
-		fmt.Println("Error: word count must be between 0 and 10,000")
-		os.Exit(1)
+	// Проверки на корректность параметров
+	if *maxWords < 1 || *maxWords > 10000 {
+		PrintError("number of words must be in between 1 and 10000")
 	}
 
-	// Проверяем чтобы длина префикса, то есть количество слов префикса не было больше 5
-	if *prefixLength < 0 || *prefixLength > 5 {
-		fmt.Println("Error: prefix length must be between 0 and 5")
+	if *prefixLength < 1 || *prefixLength > 5 {
+		PrintError("length of prefix must be in between 1 and 5")
+	}
+
+	// эта проверка служит для того, чтобы гарантировать, что программа не будет запущена без входных данных (когда она ожидает ввод через конвейер).
+	file, _ := os.Stdin.Stat()
+	if (file.Mode() & os.ModeCharDevice) != 0 { // если результат побитовой операции не равен нулю, это означает, что стандартный ввод это уст-во символов.
+		fmt.Print("Error: no input text\n")
 		os.Exit(1)
 	}
 }

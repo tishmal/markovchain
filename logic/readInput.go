@@ -2,31 +2,28 @@ package logic
 
 import (
 	"bufio"
-	"fmt"
 	"os"
+	"strings"
 )
 
 // ReadInput считывает текст из stdin и возвращает его как слайс слов words и nil если нет ошибок
-func ReadInput() ([]string, error) {
-	file, _ := os.Stdin.Stat()
-	if (file.Mode() & os.ModeCharDevice) != 0 { // если результат побитовой операции не равен нулю, это означает, что стандартный ввод это уст-во символов.
-		fmt.Print("Error: no input text\n")
-		os.Exit(1)
-	}
-
+func ReadInput() (strings.Builder, error) {
+	// Чтение текста с stdin
 	scanner := bufio.NewScanner(os.Stdin) // создаём объект для постраничного чтения данных из потока
 
-	scanner.Split(bufio.ScanWords) // этому объекту задаём режим разделения на отдельные слова
+	var text strings.Builder
 
-	var words []string
+	for scanner.Scan() {
+		text.WriteString(scanner.Text() + " ")
+	}
 
-	for scanner.Scan() { // читает элементы объекта
-		words = append(words, scanner.Text())
+	if text.Len() == 0 {
+		PrintError("no input text")
 	}
 
 	if err := scanner.Err(); err != nil {
-		return nil, err
+		PrintError("Scan invalid")
 	}
 
-	return words, nil
+	return text, nil
 }
