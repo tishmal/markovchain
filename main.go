@@ -3,27 +3,16 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
-	"strings"
-
 	"markovchain/logic"
+	"strings"
 )
 
 func main() {
-	args := os.Args
-
-	if len(args) < 2 {
-		fmt.Println("Error: no input text")
-		os.Exit(1)
-	}
-
 	// Определяем флаги ком. строки
 	wordCount := flag.Int("w", 100, "Maximum number of words to generate") // Флаг для указания количества слов
 	prefix := flag.String("p", "", "Starting prefix")                      // Флаг для начального префикса
 	prefixLength := flag.Int("l", 2, "Prefix length (default 2)")          // Флаг для длины префикса
 	showHelp := flag.Bool("help", false, "Show usage information")         // Флаг для отображения справки
-
-	flag.Parse()
 
 	logic.Validation(showHelp, wordCount, prefix, prefixLength)
 
